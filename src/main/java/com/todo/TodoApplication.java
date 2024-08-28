@@ -10,7 +10,4 @@ public class TodoApplication {
 		SpringApplication.run(TodoApplication.class, args);
 
 	}
- // bu benim ilk commitim.
-//ikinici deneme commitim.
-
 }
