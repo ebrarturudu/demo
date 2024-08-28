@@ -1,20 +1,23 @@
-package com.todo;
+package com.todo.entity;
 
 import jakarta.persistence.*;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.List;
+@Getter
+@Setter
 @Entity
-public class Task extends BaseEntity
-{
+public class Task extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int id;
     private int priority;
     private String title;
     private String description;
     private String status;
-
-    //TODO: Sınıflarda aynı olan parametreleri object orianted'ın yeteneklerini kullanarak uygun hale getir.
 
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;

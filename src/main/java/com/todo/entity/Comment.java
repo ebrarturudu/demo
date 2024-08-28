@@ -1,6 +1,10 @@
-package com.todo;
+package com.todo.entity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 public class Comment extends BaseEntity
 {
@@ -8,10 +12,6 @@ public class Comment extends BaseEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String text;
-//    private LocalDate dueDate;
-//    private String user;
-//    private String task;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     User user;
