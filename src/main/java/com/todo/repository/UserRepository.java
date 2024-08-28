@@ -1,8 +1,10 @@
 package com.todo.repository;
-import com.todo.BaseEntity;
+import com.todo.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends JpaRepository<BaseEntity.User, Integer>
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer>
 {
 
 
