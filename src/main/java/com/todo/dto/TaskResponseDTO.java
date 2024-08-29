@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class TaskResponseDTO {
     private String title;
+    private String description;
     private String mesaj;
 }

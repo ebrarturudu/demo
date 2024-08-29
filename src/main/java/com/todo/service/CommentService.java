@@ -27,8 +27,6 @@ public class CommentService {
         commentRepository.save(comment);
         return commentDTO;
     }
-    @GetMapping("/comments/findall")
-
     public List<CommentResponseDTO> findAll() {
 
         return commentRepository.findAll().stream().map(comment -> {
