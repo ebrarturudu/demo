@@ -1,5 +1,6 @@
 package com.todo.service;
 
+import com.todo.dto.CategoryRequestDTO;
 import com.todo.dto.CategoryResponseDTO;
 import com.todo.entity.Category;
 import com.todo.repository.CategoryRepository;
@@ -45,4 +46,37 @@ public class CategoryService {
 
         return categoryResponseDTO;
     }
+
+    public CategoryResponseDTO updateCategory(Category categoryDTO) {
+        Category category = categoryRepository.findById(categoryDTO.getId()).get();
+        category.setName(categoryDTO.getName());
+        category.setDescription(categoryDTO.getDescription());
+        category.setId(categoryDTO.getId());
+
+        categoryRepository.save(category);
+
+        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+        categoryResponseDTO.setName(categoryDTO.getName());
+        return categoryResponseDTO;
+    }
+
+    public CategoryResponseDTO updateCategory(int id, CategoryRequestDTO categoryRequestDTO) {
+        Category category = categoryRepository.findById(id).get();
+        category.setName(categoryRequestDTO.getName());
+        category.setDescription(categoryRequestDTO.getDescription());
+        category.setId(category.getId());
+
+        categoryRepository.save(category);
+
+        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+        categoryResponseDTO.setName(categoryRequestDTO.getName());
+
+        return categoryResponseDTO;
+    }
+
+    public void deleteCategory(int id) {
+        categoryRepository.deleteById(id);
+    }
+
+
 }

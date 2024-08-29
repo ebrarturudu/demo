@@ -1,5 +1,6 @@
 package com.todo.service;
 
+import com.todo.dto.TaskRequestDTO;
 import com.todo.dto.TaskResponseDTO;
 import com.todo.dto.UserResponseDTO;
 import com.todo.entity.Task;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,5 +47,36 @@ public class TaskService {
         taskResponseDTO.setTitle(task.getTitle());
         return taskResponseDTO;
     }
+
+//    public TaskResponseDTO findByTitle(String title) {
+//
+//    }
+
+    public TaskResponseDTO updateTask(int id, TaskRequestDTO taskRequestDTO) {
+
+        Task task = taskRepository.findById(id).get();
+        task.setTitle(taskRequestDTO.getTitle());
+        task.setDescription(taskRequestDTO.getDescription());
+        task.setStatus(taskRequestDTO.getStatus());
+
+        taskRepository.save(task);
+
+        TaskResponseDTO taskResponseDTO = new TaskResponseDTO();
+        taskResponseDTO.setTitle(task.getTitle());
+        taskResponseDTO.setDescription(taskRequestDTO.getDescription());
+
+        return taskResponseDTO;
+    }
+
+    public void deleteTask(int id) {
+        taskRepository.deleteById(id);
+    }
+
+//    public void deleteTaskByName(String taskName) {
+//        Task task = taskRepository.findByName(taskName)
+//                .orElseThrow(() -> new NoSuchElementException("Task not found with name: " + taskName));
+//
+//        taskRepository.delete(task);
+//    }
 }
 

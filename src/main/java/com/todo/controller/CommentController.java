@@ -1,5 +1,6 @@
 package com.todo.controller;
 
+import com.todo.dto.CommentRequestDTO;
 import com.todo.dto.CommentResponseDTO;
 import com.todo.dto.UserResponseDTO;
 import com.todo.entity.Comment;
@@ -35,4 +36,11 @@ public class CommentController {
         CommentResponseDTO commentResponseDTO = commentService.findById(commentId);
         return ResponseEntity.ok(commentResponseDTO);
     }
+
+//    @PutMapping("/update/{commentId}")
+//    public ResponseEntity<CommentResponseDTO> update(@PathVariable int commentId, @RequestBody CommentRequestDTO commentRequestDTO) {
+//        CommentResponseDTO updatedComment = commentService.updateComment(commentId, commentRequestDTO);
+//        return ResponseEntity.ok(updatedComment);
+//    }
+
 }

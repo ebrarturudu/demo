@@ -1,5 +1,6 @@
 package com.todo.controller;
 
+import com.todo.dto.CategoryRequestDTO;
 import com.todo.dto.CategoryResponseDTO;
 import com.todo.entity.Category;
 import com.todo.service.CategoryService;
@@ -33,9 +34,16 @@ public class CategoryController {
         return ResponseEntity.ok(categoryResponseDTO);
     }
 
-    @GetMapping
-    public String getCategories() {
-        return "Category endpointi.";
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable int categoryId, @RequestBody CategoryRequestDTO categoryRequestDTO) {
+        CategoryResponseDTO updatedCategory = categoryService.updateCategory(categoryId, categoryRequestDTO);
+        return ResponseEntity.ok(updatedCategory);
+
     }
 
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<Void> delete(@PathVariable int categoryId) {
+        categoryService.deleteCategory(categoryId);
+        return ResponseEntity.noContent().build();
+    }
 }

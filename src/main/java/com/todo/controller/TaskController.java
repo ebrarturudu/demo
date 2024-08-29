@@ -1,7 +1,7 @@
 package com.todo.controller;
 
+import com.todo.dto.TaskRequestDTO;
 import com.todo.dto.TaskResponseDTO;
-import com.todo.dto.UserResponseDTO;
 import com.todo.entity.Task;
 import com.todo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +39,22 @@ public class TaskController {
         TaskResponseDTO taskResponseDTO = taskService.findById(taskId);
         return ResponseEntity.ok(taskResponseDTO);
     }
-}
 
+    @PutMapping("/update/{taskId}")
+    public ResponseEntity<TaskResponseDTO> updateTask(@PathVariable int taskId, @RequestBody TaskRequestDTO taskRequestDTO) {
+        TaskResponseDTO updateTask = taskService.updateTask(taskId, taskRequestDTO);
+        return ResponseEntity.ok(updateTask);
+    }
+
+    @DeleteMapping("/delete/{taskId}")
+    public ResponseEntity<Void> deleteTask(@PathVariable int taskId) {
+        taskService.deleteTask(taskId);
+        return ResponseEntity.noContent().build();
+    }
+
+//    @DeleteMapping("/delete/task")
+//    public ResponseEntity<Void> deleteTask(@RequestParam String name) {
+//        taskService.deleteTaskByName(name);
+//        return ResponseEntity.noContent().build();
+//    }
+}
