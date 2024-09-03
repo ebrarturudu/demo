@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -33,19 +32,19 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserResponseDTO> findById(@PathVariable int userId) {
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long userId) {
         UserResponseDTO userResponseDTO = userService.findById(userId);
         return ResponseEntity.ok(userResponseDTO);
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<UserResponseDTO> update(@PathVariable int userId, @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long userId, @RequestBody UserRequestDTO userRequestDTO) {
         UserResponseDTO updatedUser = userService.updateUser(userId, userRequestDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<Void> delete(@PathVariable int userId) {
+    public ResponseEntity<Void> delete(@PathVariable Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }

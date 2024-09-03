@@ -19,6 +19,7 @@ public class CategoryController {
 
     @PostMapping("/create")
     public Category createCategory(@RequestBody Category category) {
+
         return categoryService.createCategory(category);
     }
 

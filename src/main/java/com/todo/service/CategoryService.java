@@ -2,6 +2,7 @@ package com.todo.service;
 
 import com.todo.dto.CategoryRequestDTO;
 import com.todo.dto.CategoryResponseDTO;
+import com.todo.entity.BaseEntity;
 import com.todo.entity.Category;
 import com.todo.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,20 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-//    public Category createCategory(Category category) {
-//
-//        return categoryRepository.save(category);
-//    }
-
     public Category createCategory(Category categoryDTO) {
         Category category = new Category();
+
         category.setName(categoryDTO.getName());
         category.setDescription(categoryDTO.getDescription());
         category.setId(categoryDTO.getId());
-        categoryRepository.save(category);
+
+        Category save = categoryRepository.save(category);
+
+        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+
+        categoryResponseDTO.setId(save.getId());
+        categoryResponseDTO.setName(save.getName());
+        categoryResponseDTO.setDescription(save.getDescription());
 
         return categoryDTO;
     }
@@ -47,18 +51,19 @@ public class CategoryService {
         return categoryResponseDTO;
     }
 
-    public CategoryResponseDTO updateCategory(Category categoryDTO) {
-        Category category = categoryRepository.findById(categoryDTO.getId()).get();
-        category.setName(categoryDTO.getName());
-        category.setDescription(categoryDTO.getDescription());
-        category.setId(categoryDTO.getId());
-
-        categoryRepository.save(category);
-
-        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
-        categoryResponseDTO.setName(categoryDTO.getName());
-        return categoryResponseDTO;
-    }
+//    public CategoryResponseDTO updateCategory(Category categoryDTO) {
+//        Category category = categoryRepository.findById(categoryDTO.getId()).get();
+//        category.setName(categoryDTO.getName());
+//        category.setDescription(categoryDTO.getDescription());
+//        category.setId(categoryDTO.getId());
+//
+//        categoryRepository.save(category);
+//
+//        CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+//        categoryResponseDTO.setName(categoryDTO.getName());
+//        be.setMesaj("başarılı güncelleme");
+//        return categoryResponseDTO;
+//    }
 
     public CategoryResponseDTO updateCategory(int id, CategoryRequestDTO categoryRequestDTO) {
         Category category = categoryRepository.findById(id).get();
