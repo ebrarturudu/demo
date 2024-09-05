@@ -8,7 +8,8 @@ import lombok.Setter;
 @Setter
 public class TaskRequestDTO extends Task {
     private Long UserId;
-    private int priority;
+    private Long CategoryId;
+    private String priority;
     private String title;
     private String description;
     private String status;

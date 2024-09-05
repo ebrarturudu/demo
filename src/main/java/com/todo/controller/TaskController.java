@@ -2,6 +2,7 @@ package com.todo.controller;
 
 import com.todo.dto.TaskRequestDTO;
 import com.todo.dto.TaskResponseDTO;
+import com.todo.entity.Task;
 import com.todo.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +18,10 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @PostMapping("/create/{user_id}")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
     public TaskResponseDTO createTask(@RequestBody TaskRequestDTO taskRequestDTO) {
-        TaskResponseDTO createdTask = taskService.createTask(taskRequestDTO);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask).getBody();
+        return taskService.createTask(taskRequestDTO);
     }
 
     @GetMapping("/findall")
@@ -48,4 +47,15 @@ public class TaskController {
         taskService.deleteTask(taskId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("find/{userId}")
+    public List<Task> getTasksByUserId(@PathVariable Long userId) {
+        return taskService.getTasksByUserId(userId);
+    }
+
+    @GetMapping("find/{categoryId}")
+    public List<Task> getTasksByCategoryId(@PathVariable Long categoryId) {
+        return taskService.getTasksByCategoryId(categoryId);
+    }
+
 }

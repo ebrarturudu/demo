@@ -19,16 +19,13 @@ public class UserController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
     public UserResponseDTO createUser(@RequestBody UserRequestDTO userRequestDTO) {
-        UserResponseDTO createdUser = userService.createUser(userRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser).getBody();
-        //return userService.createUser(userRequestDTO);
+        return userService.createUser(userRequestDTO);
+
     }
 
     @GetMapping("/findall")
-    public ResponseEntity<List<UserResponseDTO>> findAll() {
-        List<UserResponseDTO> users = userService.findAll();
-        return ResponseEntity.ok(users);
-
+    public List<UserResponseDTO> findAllUsers() {
+        return userService.findAll();
     }
 
     @GetMapping("/{userId}")

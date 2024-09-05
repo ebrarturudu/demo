@@ -2,12 +2,17 @@ package com.todo.service;
 
 import com.todo.dto.TaskRequestDTO;
 import com.todo.dto.TaskResponseDTO;
+import com.todo.entity.Category;
 import com.todo.entity.Task;
+import com.todo.entity.User;
+import com.todo.exception.TaskNotFoundException;
+import com.todo.exception.UserNotFoundException;
 import com.todo.repository.TaskRepository;
 import com.todo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +26,18 @@ public class TaskService {
 
 
     public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
+
+        User user = userRepository.findById(taskRequestDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+        Category category = taskRepository.findById(taskRequestDTO.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found")).getCategory();
+
         Task task = new Task();
-        task.setUser(userRepository.findById(taskRequestDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found")));
+
         task.setPriority(taskRequestDTO.getPriority());
         task.setTitle(taskRequestDTO.getTitle());
         task.setDescription(taskRequestDTO.getDescription());
         task.setStatus(taskRequestDTO.getStatus());
+        task.setUser(user);
+        task.setCategory(category);
 
         taskRepository.save(task);
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO();
@@ -36,9 +47,9 @@ public class TaskService {
         taskResponseDTO.setTitle(task.getTitle());
         taskResponseDTO.setDescription(task.getDescription());
         taskResponseDTO.setStatus(task.getStatus());
-        taskResponseDTO.setUserId(task.getUserID());
+
         return taskResponseDTO;
- }
+    }
 
     public List<TaskResponseDTO> findAll() {
         return taskRepository.findAll().stream().map(task -> {//tüm kullanıcıları veritabanından alır
@@ -49,35 +60,30 @@ public class TaskService {
             taskResponseDTO.setStatus(task.getStatus());
             return taskResponseDTO;
         }).collect(Collectors.toList());//streami listeye döndürür.
-   }
-//public List<TaskResponseDTO> findAll() {
-//    return taskRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
-//}
+    }
+
 
     public TaskResponseDTO findById(Long id) {
-        Task task = taskRepository.findById(id).get();
-                //.orElseThrow(() -> new RuntimeException("Task not found"));
-        //
-//            return convertToDTO(task);
-//        }
+        Task task = taskRepository.findById(id).orElseThrow(() ->new TaskNotFoundException("task with id " + id + " not found"));;
 
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO();
         taskResponseDTO.setTitle(task.getTitle());
         taskResponseDTO.setDescription(task.getDescription());
         taskResponseDTO.setPriority(task.getPriority());
         taskResponseDTO.setStatus(task.getStatus());
-        return taskResponseDTO;}
+        return taskResponseDTO;
+    }
 
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO taskRequestDTO) {
 
-        Task task = taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task with id "+id+"not found"));
         task.setTitle(taskRequestDTO.getTitle());
         task.setDescription(taskRequestDTO.getDescription());
         task.setStatus(taskRequestDTO.getStatus());
         task.setPriority(taskRequestDTO.getPriority());
 
         taskRepository.save(task);
-//        return convertToDTO(task);
+
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO();
         taskResponseDTO.setTitle(task.getTitle());
         taskResponseDTO.setDescription(taskRequestDTO.getDescription());
@@ -87,34 +93,18 @@ public class TaskService {
     }
 
     public void deleteTask(Long id) {
+        if (!taskRepository.existsById(id)) {
+            throw new TaskNotFoundException("Task with id " + id + " not found");
+        }
         taskRepository.deleteById(id);
+        System.out.println("Deleted task with id " + id);
     }
 
-//    private TaskResponseDTO convertToDTO(Task task) {
-//        TaskResponseDTO taskResponseDTO = new TaskResponseDTO();
-//        taskResponseDTO.setUserId(task.getId());
-//        taskResponseDTO.setTitle(task.getTitle());
-//        taskResponseDTO.setDescription(task.getDescription());
-//        taskResponseDTO.setPriority(task.getPriority());
-//        taskResponseDTO.setStatus(task.getStatus());
-//        taskResponseDTO.setUserId(task.getUser().getId()); // userId alanını ayarlayın
-//        return taskResponseDTO;
-//    }
+    public List<Task> getTasksByUserId(Long userId) {
+        return taskRepository.findByUserId(userId);
+    }
+
+    public List<Task> getTasksByCategoryId(Long categoryId) { return taskRepository.findByCategoryId(categoryId);
+    }
 }
-
-//        User user = userRepository.findById(taskRequestDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-//
-//        Task task = new Task();
-//
-//        task.setPriority(taskRequestDTO.getPriority());
-//        task.setTitle(taskRequestDTO.getTitle());
-//        task.setDescription(taskRequestDTO.getDescription());
-//        task.setStatus(taskRequestDTO.getStatus());
-//        task.setId(taskRequestDTO.getId());
-//        task.setUser(user);
-//
-//        taskRepository.save(task);
-//
-//        return convertToDTO(task);
-
 

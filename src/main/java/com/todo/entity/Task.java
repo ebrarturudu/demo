@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -15,17 +14,15 @@ public class Task extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int priority;
+    private String priority;
     private String title;
     private String description;
     private String status;
     private Long UserID;
-
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name="users")
-//    private User user;
+    private Long CategoryID;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="category_id",nullable=false)
     private Category category;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -35,7 +32,7 @@ public class Task extends BaseEntity {
     @JoinColumn(name="user_id",nullable=false)
     private User user;
 
-    public Task(){
-
-    }
+//    public Task(){
+//
+//    }
 }

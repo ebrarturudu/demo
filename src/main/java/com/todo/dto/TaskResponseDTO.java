@@ -9,8 +9,8 @@ public class TaskResponseDTO {
     private String title;
     private String description;
     private String status;
-    private int priority;
-    private Long UserId;
+    private String priority;
+  //  private Long UserId;
     private int id;
 
 
