@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -20,32 +19,29 @@ public class UserController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.OK)
     public UserResponseDTO createUser(@RequestBody UserRequestDTO userRequestDTO) {
-        UserResponseDTO createdUser = userService.createUser(userRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser).getBody();
-        //return userService.createUser(userRequestDTO);
+        return userService.createUser(userRequestDTO);
+
     }
 
     @GetMapping("/findall")
-    public ResponseEntity<List<UserResponseDTO>> findAll() {
-        List<UserResponseDTO> users = userService.findAll();
-        return ResponseEntity.ok(users);
-
+    public List<UserResponseDTO> findAllUsers() {
+        return userService.findAll();
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserResponseDTO> findById(@PathVariable int userId) {
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long userId) {
         UserResponseDTO userResponseDTO = userService.findById(userId);
         return ResponseEntity.ok(userResponseDTO);
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<UserResponseDTO> update(@PathVariable int userId, @RequestBody UserRequestDTO userRequestDTO) {
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long userId, @RequestBody UserRequestDTO userRequestDTO) {
         UserResponseDTO updatedUser = userService.updateUser(userId, userRequestDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<Void> delete(@PathVariable int userId) {
+    public ResponseEntity<Void> delete(@PathVariable Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }

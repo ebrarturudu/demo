@@ -2,7 +2,6 @@ package com.todo.controller;
 
 import com.todo.dto.CategoryRequestDTO;
 import com.todo.dto.CategoryResponseDTO;
-import com.todo.entity.Category;
 import com.todo.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +17,13 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/create")
-    public Category createCategory(@RequestBody Category category) {
-        return categoryService.createCategory(category);
+    public CategoryResponseDTO createCategory(@RequestBody CategoryRequestDTO categoryRequestDTO) {
+        return categoryService.createCategory(categoryRequestDTO);
     }
 
     @GetMapping("/findall")
-    public ResponseEntity<List<CategoryResponseDTO>> findAll() {
-        List<CategoryResponseDTO> categories = categoryService.findAll();
-        return ResponseEntity.ok(categories);
+    public List<CategoryResponseDTO> findAllCategories() {
+        return categoryService.findAll();
     }
 
     @GetMapping("/{categoryId}")
@@ -34,15 +32,16 @@ public class CategoryController {
         return ResponseEntity.ok(categoryResponseDTO);
     }
 
-    @PutMapping("/update/{userId}")
+    @PutMapping("/update/{categoryId}")
     public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable int categoryId, @RequestBody CategoryRequestDTO categoryRequestDTO) {
         CategoryResponseDTO updatedCategory = categoryService.updateCategory(categoryId, categoryRequestDTO);
         return ResponseEntity.ok(updatedCategory);
 
     }
 
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<Void> delete(@PathVariable int categoryId) {
+    @DeleteMapping("/delete/{categoryId}")
+    public ResponseEntity<Void> delete(@PathVariable Long categoryId){
+
         categoryService.deleteCategory(categoryId);
         return ResponseEntity.noContent().build();
     }
