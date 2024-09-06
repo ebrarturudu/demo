@@ -78,5 +78,9 @@ public class UserService {
         userRepository.deleteById(id);
         System.out.println("Deleted user with id " + id);
     }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+    }
 }
 

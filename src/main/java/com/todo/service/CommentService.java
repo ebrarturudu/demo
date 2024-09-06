@@ -21,14 +21,25 @@ import java.util.stream.Collectors;
 @Transactional
 public class CommentService {
 
-    @Autowired
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
+    private final UserService userService;
+    private final TaskService taskService;
 
-    @Autowired
-    private TaskRepository taskRepository;
+    public CommentService(CommentRepository commentRepository, UserService userService, TaskService taskService) {
+        this.commentRepository = commentRepository;
+        this.userService = userService;
+        this.taskService = taskService;
+    }
 
-    @Autowired
-    private UserRepository userRepository;
+
+//    @Autowired
+//    private CommentRepository commentRepository;
+//
+//    @Autowired
+//    private TaskRepository taskRepository;
+//
+//    @Autowired
+//    private UserRepository userRepository;
 
     public CommentResponseDTO createComment(CommentRequestDTO commentRequestDTO) {
 
@@ -36,8 +47,8 @@ public class CommentService {
 
         comment.setText(commentRequestDTO.getText());
 
-        Task task = taskRepository.findById(commentRequestDTO.getTaskId()).orElseThrow(() -> new TaskNotFoundException("task bulunamadı"));
-        User user= userRepository.findById(commentRequestDTO.getUserId()).orElseThrow(()->new CategoryNotFoundException("category bulunamadı."));
+        Task task = taskService.findTaskById(commentRequestDTO.getTaskId());
+        User user= userService.findUserById(commentRequestDTO.getUserId());
 
         comment.setTask(task);
         comment.setUser(user);

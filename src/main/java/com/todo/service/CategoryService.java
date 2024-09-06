@@ -3,7 +3,9 @@ package com.todo.service;
 import com.todo.dto.CategoryRequestDTO;
 import com.todo.dto.CategoryResponseDTO;
 import com.todo.entity.Category;
+import com.todo.entity.User;
 import com.todo.exception.CategoryNotFoundException;
+import com.todo.exception.UserNotFoundException;
 import com.todo.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +18,18 @@ import java.util.stream.Collectors;
 @Transactional
 public class CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    //@Autowired
+    private final CategoryRepository categoryRepository;
+
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
     public CategoryResponseDTO createCategory(CategoryRequestDTO categoryRequestDTO) {
         Category category = new Category();
 
         category.setName(categoryRequestDTO.getName());
         category.setDescription(categoryRequestDTO.getDescription());
-        // category.setId(categoryRequestDTO.getId());
 
         Category save = categoryRepository.save(category);
 
@@ -80,5 +85,9 @@ public class CategoryService {
         }
         categoryRepository.deleteById(id);
         System.out.println("Category deleted" + id);
+    }
+
+    public Category findCategoryById(Long id) {
+        return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("User with id " + id + " not found"));
     }
 }

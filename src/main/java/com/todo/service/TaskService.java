@@ -6,11 +6,8 @@ import com.todo.entity.Category;
 import com.todo.entity.Task;
 import com.todo.entity.User;
 import com.todo.exception.TaskNotFoundException;
-import com.todo.repository.CategoryRepository;
 import com.todo.repository.TaskRepository;
-import com.todo.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,14 +17,26 @@ import java.util.stream.Collectors;
 @Transactional
 public class TaskService {
 
-    @Autowired
-    private TaskRepository taskRepository;
+    //@Autowired
+    private final TaskRepository taskRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+   // @Autowired
+    private final UserService userService;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    //@Autowired
+    private final CategoryService categoryService;
+
+//    @Autowired
+//    private UserRepository userRepository;
+//
+//    @Autowired
+//    private CategoryRepository categoryRepository;
+
+    public TaskService(TaskRepository taskRepository, UserService userService, CategoryService categoryService) {
+        this.taskRepository = taskRepository;
+        this.userService = userService;
+        this.categoryService = categoryService;
+    }
 
     public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
 
@@ -38,8 +47,8 @@ public class TaskService {
         task.setDescription(taskRequestDTO.getDescription());
         task.setStatus(taskRequestDTO.getStatus());
 
-        User user = userRepository.findById(taskRequestDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        Category category = categoryRepository.findById(taskRequestDTO.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
+        User user = userService.findUserById(taskRequestDTO.getUserId());
+        Category category = categoryService.findCategoryById(taskRequestDTO.getCategoryId());
 
         task.setUser(user);
         task.setCategory(category);
@@ -72,7 +81,6 @@ public class TaskService {
 
     public TaskResponseDTO findById(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("task with id " + id + " not found"));
-        ;
 
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO();
 
@@ -116,6 +124,9 @@ public class TaskService {
 
     public List<Task> getTasksByCategoryId(Long categoryId) {
         return taskRepository.findByCategoryId(categoryId);
+    }
+    public Task findTaskById(Long id) {
+        return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task with id " + id + " not found"));
     }
 }
 
