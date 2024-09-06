@@ -6,7 +6,7 @@ import com.todo.entity.Category;
 import com.todo.entity.Task;
 import com.todo.entity.User;
 import com.todo.exception.TaskNotFoundException;
-import com.todo.exception.UserNotFoundException;
+import com.todo.repository.CategoryRepository;
 import com.todo.repository.TaskRepository;
 import com.todo.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -19,16 +19,17 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class TaskService {
+
     @Autowired
     private TaskRepository taskRepository;
+
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     public TaskResponseDTO createTask(TaskRequestDTO taskRequestDTO) {
-
-        User user = userRepository.findById(taskRequestDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
-        Category category = taskRepository.findById(taskRequestDTO.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found")).getCategory();
 
         Task task = new Task();
 
@@ -36,17 +37,24 @@ public class TaskService {
         task.setTitle(taskRequestDTO.getTitle());
         task.setDescription(taskRequestDTO.getDescription());
         task.setStatus(taskRequestDTO.getStatus());
+
+        User user = userRepository.findById(taskRequestDTO.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+        Category category = categoryRepository.findById(taskRequestDTO.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found"));
+
         task.setUser(user);
         task.setCategory(category);
 
-        taskRepository.save(task);
+        Task savedTask = taskRepository.save(task);
+
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO();
 
-        taskResponseDTO.setId(task.getId());
-        taskResponseDTO.setPriority(task.getPriority());
-        taskResponseDTO.setTitle(task.getTitle());
-        taskResponseDTO.setDescription(task.getDescription());
-        taskResponseDTO.setStatus(task.getStatus());
+        taskResponseDTO.setId(savedTask.getId());
+        taskResponseDTO.setPriority(savedTask.getPriority());
+        taskResponseDTO.setTitle(savedTask.getTitle());
+        taskResponseDTO.setDescription(savedTask.getDescription());
+        taskResponseDTO.setStatus(savedTask.getStatus());
+        taskResponseDTO.setUserId(savedTask.getUser().getId());
+        taskResponseDTO.setCategoryId(savedTask.getCategory().getId());
 
         return taskResponseDTO;
     }
@@ -62,21 +70,23 @@ public class TaskService {
         }).collect(Collectors.toList());//streami listeye döndürür.
     }
 
-
     public TaskResponseDTO findById(Long id) {
-        Task task = taskRepository.findById(id).orElseThrow(() ->new TaskNotFoundException("task with id " + id + " not found"));;
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("task with id " + id + " not found"));
+        ;
 
         TaskResponseDTO taskResponseDTO = new TaskResponseDTO();
+
         taskResponseDTO.setTitle(task.getTitle());
         taskResponseDTO.setDescription(task.getDescription());
         taskResponseDTO.setPriority(task.getPriority());
         taskResponseDTO.setStatus(task.getStatus());
+
         return taskResponseDTO;
     }
 
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO taskRequestDTO) {
 
-        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task with id "+id+"not found"));
+        Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException("Task with id " + id + "not found"));
         task.setTitle(taskRequestDTO.getTitle());
         task.setDescription(taskRequestDTO.getDescription());
         task.setStatus(taskRequestDTO.getStatus());
@@ -104,7 +114,8 @@ public class TaskService {
         return taskRepository.findByUserId(userId);
     }
 
-    public List<Task> getTasksByCategoryId(Long categoryId) { return taskRepository.findByCategoryId(categoryId);
+    public List<Task> getTasksByCategoryId(Long categoryId) {
+        return taskRepository.findByCategoryId(categoryId);
     }
 }
 

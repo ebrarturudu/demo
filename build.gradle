@@ -30,6 +30,8 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+//	implementation 'org.springframework.boot:spring-boot-starter-security'
+
 
 	//implementation 'javax.persistence:javax.persistence-api:2.2'
 	implementation 'org.hibernate:hibernate-core:6.6.0.Final'

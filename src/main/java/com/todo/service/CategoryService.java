@@ -5,6 +5,7 @@ import com.todo.dto.CategoryResponseDTO;
 import com.todo.entity.Category;
 import com.todo.exception.CategoryNotFoundException;
 import com.todo.repository.CategoryRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CategoryService {
 
     @Autowired
@@ -22,7 +24,7 @@ public class CategoryService {
 
         category.setName(categoryRequestDTO.getName());
         category.setDescription(categoryRequestDTO.getDescription());
-        category.setId(categoryRequestDTO.getId());
+        // category.setId(categoryRequestDTO.getId());
 
         Category save = categoryRepository.save(category);
 
@@ -44,7 +46,7 @@ public class CategoryService {
         }).collect(Collectors.toList());
     }
 
-    public CategoryResponseDTO findById(int id) {
+    public CategoryResponseDTO findById(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("User with id " + id + " not found"));
 
         CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
@@ -55,7 +57,7 @@ public class CategoryService {
         return categoryResponseDTO;
     }
 
-    public CategoryResponseDTO updateCategory(int id, CategoryRequestDTO categoryRequestDTO) {
+    public CategoryResponseDTO updateCategory(Long id, CategoryRequestDTO categoryRequestDTO) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("User with id " + id + " not found"));
         category.setName(categoryRequestDTO.getName());
         category.setDescription(categoryRequestDTO.getDescription());
@@ -72,11 +74,11 @@ public class CategoryService {
     }
 
     public void deleteCategory(Long id) {
-        if (!categoryRepository.existsById(Math.toIntExact(id))) {
-            throw new CategoryNotFoundException("User with id " + id + " not found");
-        }
-        categoryRepository.deleteById(Math.toIntExact(id));
-        System.out.println("Deleted Category with id " + id);
-    }
+        if (!categoryRepository.existsById(id)) {
+            throw new CategoryNotFoundException("Category with id " + id + " not found");
 
+        }
+        categoryRepository.deleteById(id);
+        System.out.println("Category deleted" + id);
+    }
 }

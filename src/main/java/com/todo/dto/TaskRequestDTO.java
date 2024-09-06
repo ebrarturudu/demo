@@ -7,12 +7,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TaskRequestDTO extends Task {
+
     private Long UserId;
-    private Long CategoryId;
+    private Long categoryId;
     private String priority;
     private String title;
     private String description;
     private String status;
-    private int id;
+//    private Long id;
 
 }

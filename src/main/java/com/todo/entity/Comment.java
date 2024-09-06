@@ -10,13 +10,16 @@ public class Comment extends BaseEntity
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+
+    private Long id;
     private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
     User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id", nullable = false)
     Task task;
+
 
 }

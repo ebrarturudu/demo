@@ -1,9 +1,8 @@
 package com.todo.controller;
 
-
 import com.todo.dto.CommentRequestDTO;
 import com.todo.dto.CommentResponseDTO;
-
+import com.todo.entity.Comment;
 import com.todo.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-    @PostMapping("/create")
+    @PostMapping("/create/{userId}/{taskId}")
     @ResponseStatus(HttpStatus.OK)
     public CommentResponseDTO createComment(@RequestBody CommentRequestDTO commentRequestDTO) {
 
@@ -28,13 +27,9 @@ public class CommentController {
     }
 
     @GetMapping("/findall")
-//    public ResponseEntity<List<CommentResponseDTO>> findAll() {
-//        List<CommentResponseDTO> users = commentService.findAll();
-//        return ResponseEntity.ok(users);
-
-public List<CommentResponseDTO> findAllComments() {
+    public List<CommentResponseDTO> findAll() {
         return commentService.findAll();
-}
+    }
 
     @GetMapping("/{commentId}")
     public ResponseEntity<CommentResponseDTO> findById(@PathVariable Long commentId) {
@@ -52,5 +47,14 @@ public List<CommentResponseDTO> findAllComments() {
     public ResponseEntity<Void> delete(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("find/{taskId}")
+    public List<Comment> getCommentsByTaskId(@PathVariable Long taskId) {
+        return commentService.getCommentsByUserId(taskId);
+    }
+    @GetMapping("find/{userId}")
+    public List<Comment> getCommentsByUserId(@PathVariable Long userId) {
+        return commentService.getCommentsByTaskId(userId);
     }
 }

@@ -18,7 +18,7 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    @PostMapping("/create")
+    @PostMapping("/create/{userId}/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     public TaskResponseDTO createTask(@RequestBody TaskRequestDTO taskRequestDTO) {
         return taskService.createTask(taskRequestDTO);

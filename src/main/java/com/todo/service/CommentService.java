@@ -3,33 +3,53 @@ package com.todo.service;
 import com.todo.dto.CommentRequestDTO;
 import com.todo.dto.CommentResponseDTO;
 import com.todo.entity.Comment;
+import com.todo.entity.Task;
+import com.todo.entity.User;
+import com.todo.exception.CategoryNotFoundException;
 import com.todo.exception.CommentNotFoundException;
+import com.todo.exception.TaskNotFoundException;
 import com.todo.repository.CommentRepository;
+import com.todo.repository.TaskRepository;
+import com.todo.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class CommentService {
+
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     public CommentResponseDTO createComment(CommentRequestDTO commentRequestDTO) {
-        Comment comment = new Comment();
-        comment.setId(commentRequestDTO.getUserId());
+
+       Comment comment = new Comment();
+
         comment.setText(commentRequestDTO.getText());
 
-        Comment save = commentRepository.save(comment);
+        Task task = taskRepository.findById(commentRequestDTO.getTaskId()).orElseThrow(() -> new TaskNotFoundException("task bulunamadı"));
+        User user= userRepository.findById(commentRequestDTO.getUserId()).orElseThrow(()->new CategoryNotFoundException("category bulunamadı."));
+
+        comment.setTask(task);
+        comment.setUser(user);
+
+        Comment savedComment = commentRepository.save(comment);
 
         CommentResponseDTO commentResponseDTO = new CommentResponseDTO();
 
-        commentResponseDTO.setUserId(save.getId());
-        commentResponseDTO.setText(comment.getText());
+        commentResponseDTO.setId(savedComment.getId());
+        commentResponseDTO.setText(savedComment.getText());
+        commentResponseDTO.setTaskId(savedComment.getTask().getId());
+        commentResponseDTO.setUserId(savedComment.getUser().getId());
 
         return commentResponseDTO;
     }
@@ -75,4 +95,10 @@ public class CommentService {
         commentRepository.deleteById(id);
         System.out.println("Deleted comment with id " + id);
     }
+
+    public List<Comment> getCommentsByUserId(Long userId) {
+        return commentRepository.findByUserId(userId);}
+
+    public List<Comment> getCommentsByTaskId(Long taskId) {
+        return commentRepository.findByTaskId(taskId);}
 }

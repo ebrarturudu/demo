@@ -16,7 +16,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping("/create")
+    @PostMapping("/create/{userId}")
     public CategoryResponseDTO createCategory(@RequestBody CategoryRequestDTO categoryRequestDTO) {
         return categoryService.createCategory(categoryRequestDTO);
     }
@@ -27,13 +27,13 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public ResponseEntity<CategoryResponseDTO> findById(@PathVariable int categoryId) {
+    public ResponseEntity<CategoryResponseDTO> findById(@PathVariable Long categoryId) {
         CategoryResponseDTO categoryResponseDTO = categoryService.findById(categoryId);
         return ResponseEntity.ok(categoryResponseDTO);
     }
 
     @PutMapping("/update/{categoryId}")
-    public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable int categoryId, @RequestBody CategoryRequestDTO categoryRequestDTO) {
+    public ResponseEntity<CategoryResponseDTO> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryRequestDTO categoryRequestDTO) {
         CategoryResponseDTO updatedCategory = categoryService.updateCategory(categoryId, categoryRequestDTO);
         return ResponseEntity.ok(updatedCategory);
 

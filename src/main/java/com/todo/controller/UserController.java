@@ -25,6 +25,7 @@ public class UserController {
 
     @GetMapping("/findall")
     public List<UserResponseDTO> findAllUsers() {
+
         return userService.findAll();
     }
 

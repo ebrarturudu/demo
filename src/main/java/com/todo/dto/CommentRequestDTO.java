@@ -6,6 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CommentRequestDTO {
-    private int userId;
+    private Long id;
+    private Long userId;
     private String text;
+    private Long taskId;
+//    private Long categoryId;
 }

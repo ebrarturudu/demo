@@ -7,7 +7,7 @@ import java.util.List;
 @Getter
 @Setter
 public class UserResponseDTO {//kullanıcıya sunacağımız veriler. Genellikle kullanıcı bilgilerini listeleme ve tek bir kullanıcıyı getirme işlemlerinde kullanılır.
-    private int id;
+    private Long id;
     private String name;
     private String email;
 }
